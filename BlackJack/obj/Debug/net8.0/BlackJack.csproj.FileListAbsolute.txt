@@ -1,0 +1,15 @@
+C:\Code Projects\BlackJack\BlackJack\bin\Debug\net8.0\BlackJack.exe
+C:\Code Projects\BlackJack\BlackJack\bin\Debug\net8.0\BlackJack.deps.json
+C:\Code Projects\BlackJack\BlackJack\bin\Debug\net8.0\BlackJack.runtimeconfig.json
+C:\Code Projects\BlackJack\BlackJack\bin\Debug\net8.0\BlackJack.dll
+C:\Code Projects\BlackJack\BlackJack\bin\Debug\net8.0\BlackJack.pdb
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.AssemblyInfoInputs.cache
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.AssemblyInfo.cs
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.csproj.CoreCompileInputs.cache
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.sourcelink.json
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.dll
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\refint\BlackJack.dll
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.pdb
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\BlackJack.genruntimeconfig.cache
+C:\Code Projects\BlackJack\BlackJack\obj\Debug\net8.0\ref\BlackJack.dll

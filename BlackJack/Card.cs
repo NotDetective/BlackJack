@@ -12,7 +12,7 @@ public class Card
 
     public enum Rank
     {
-        Ace = 11,
+        Ace = 1,
         Two = 2,
         Three = 3,
         Four = 4,
@@ -22,9 +22,9 @@ public class Card
         Eight = 8,
         Nine = 9,
         Ten = 10,
-        Jack = 10,
-        Queen = 10,
-        King = 10
+        Jack = 11,
+        Queen = 12,
+        King = 13
     }
 
 
@@ -40,7 +40,7 @@ public class Card
 
     public int GetValue()
     {
-        return (int)CardRank;
+        return (int)CardRank > 10 ? 10 : (int)CardRank;
     }
 
     public string GetCardName()

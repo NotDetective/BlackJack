@@ -2,7 +2,7 @@
 
 public class Deck
 {
-    public List<Card> Cards { get; set; }
+    private List<Card> Cards { get; set; }
 
     public Deck()
     {
@@ -25,7 +25,6 @@ public class Deck
             int number = Cards.IndexOf(card);
             int randomIndex = rng.Next(number + 1);
             (Cards[randomIndex], Cards[number]) = (Cards[number], Cards[randomIndex]);
-
         }
     }
 
@@ -48,7 +47,7 @@ public class Deck
         }
     }
 
-    public bool IsEmpty()
+    private bool IsEmpty()
     {
         return Cards.Count == 0;
     }

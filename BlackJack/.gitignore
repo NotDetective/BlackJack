@@ -1,14 +1,13 @@
 ﻿.idea/
-bin/Debug/
-obj/Debug/
-BlackJack\bin\Debug/
-BlackJack\obj/Debug/
+bin/*
+obj/*
 
 # Compiled files
 *.class
 *.war
 *.ear
 *.jar
+*.user
 
 # Logs and databases
 *.log

@@ -1,6 +1,8 @@
 ﻿.idea/
-obj/
-bin/
+bin/Debug/
+obj/Debug/
+BlackJack\bin\Debug/
+BlackJack\obj/Debug/
 
 # Compiled files
 *.class

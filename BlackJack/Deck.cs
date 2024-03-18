@@ -1,4 +1,7 @@
-﻿namespace BlackJack;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BlackJack;
 
 public class Deck
 {

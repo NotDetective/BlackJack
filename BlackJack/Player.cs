@@ -1,12 +1,15 @@
-﻿namespace BlackJack;
+﻿using System;
 
-public class Player
+namespace BlackJack;
+
+public class Player(string name, Hand hand)
 {
+    private readonly Variables _variables = new Variables();
 
     public int Score { get; set; }
-    public string Name { get; set; }
+    private string Name { get; set; } = name;
 
-    public Hand PlayerHand { get; set; } = new Hand();
+    private Hand PlayerHand { get; set; } = hand;
 
     public void DisplayHand()
     {
@@ -22,12 +25,12 @@ public class Player
 
     public bool IsBusted()
     {
-        return PlayerHand.GetHandValue() > 21;
+        return PlayerHand.GetHandValue() > _variables.BustAmount;
     }
 
     public void Hit()
     {
-        //
+        
     }
 
     public void Stand()

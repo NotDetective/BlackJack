@@ -17,40 +17,4 @@ public class Deck
             }
         }
     }
-
-    public void Shuffle()
-    {
-        Random rng = new Random();
-
-        foreach (var card in Cards.ToList())
-        {
-            int number = Cards.IndexOf(card);
-            int randomIndex = rng.Next(number + 1);
-            (Cards[randomIndex], Cards[number]) = (Cards[number], Cards[randomIndex]);
-        }
-    }
-
-    public Card DrawCard()
-    {
-        if (IsEmpty())
-        {
-            throw new Exception("Deck is empty");
-        }
-        Card card = Cards[0];
-        Cards.RemoveAt(0);
-        return card;
-    }
-
-    public void PrintDeck()
-    {
-        foreach (Card card in Cards)
-        {
-            Console.WriteLine(card.GetCardName());
-        }
-    }
-
-    private bool IsEmpty()
-    {
-        return Cards.Count == 0;
-    }
 }

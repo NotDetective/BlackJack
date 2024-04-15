@@ -3,7 +3,9 @@
 public class Hand
 {
 
-public List<Card> Cards { get; set; } = new List<Card>();
+    private readonly Variables _variables = new Variables();
+    public List<Card> Cards { get; set; } = new List<Card>();
+    public float Bet { get; set; }
 
     public void AddCard(Card card)
     {
@@ -12,12 +14,7 @@ public List<Card> Cards { get; set; } = new List<Card>();
 
     public int GetHandValue()
     {
-        int handValue = 0;
-        foreach (var card in Cards)
-        {
-            handValue += card.GetValue();
-        }
-        return handValue;
+        return Cards.Sum(card => card.GetValue());
     }
 
     public void DisplayHand()
@@ -26,6 +23,16 @@ public List<Card> Cards { get; set; } = new List<Card>();
         {
             Console.WriteLine(card.GetCardName());
         }
+    }
+
+    public bool IsBlackJack()
+    {
+        return Cards.Count == 2 && GetHandValue() == _variables.BlackJackAmount;
+    }
+
+    public bool IsBusted()
+    {
+        return GetHandValue() > _variables.BustAmount;
     }
 
 }

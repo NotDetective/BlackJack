@@ -35,4 +35,19 @@ public class Shoe
         }
     }
 
+    public Card DrawCard()
+    {
+        if (IsEmpty())
+        {
+            throw new Exception("Shoe is empty");
+        }
+        Card card = Cards[0];
+        Cards.RemoveAt(0);
+        return card;
+    }
+
+    private bool IsEmpty()
+    {
+        return Cards.Count == 0;
+    }
 }

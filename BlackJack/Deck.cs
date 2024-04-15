@@ -1,12 +1,14 @@
-﻿namespace BlackJack;
+﻿using System;
+using System.Collections.Generic;
+
+namespace BlackJack;
 
 public class Deck
 {
-    private List<Card> Cards { get; set; }
+    private List<Card> Cards { get; set; } = new List<Card>();
 
     public Deck()
     {
-        Cards = new List<Card>();
         foreach (Card.Suit suit in Enum.GetValues(typeof(Card.Suit)))
         {
             foreach (Card.Rank rank in Enum.GetValues(typeof(Card.Rank)))
@@ -20,7 +22,7 @@ public class Deck
     {
         Random rng = new Random();
 
-        foreach (var card in Cards)
+        foreach (var card in Cards.ToList())
         {
             int number = Cards.IndexOf(card);
             int randomIndex = rng.Next(number + 1);
@@ -28,15 +30,15 @@ public class Deck
         }
     }
 
-    public Card? DrawCard()
+    public Card DrawCard()
     {
         if (IsEmpty())
         {
-            Card card = Cards[0];
-            Cards.RemoveAt(0);
-            return card;
+            throw new Exception("Deck is empty");
         }
-        return null;
+        Card card = Cards[0];
+        Cards.RemoveAt(0);
+        return card;
     }
 
     public void PrintDeck()

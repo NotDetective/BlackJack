@@ -1,6 +1,6 @@
 ﻿namespace BlackJack;
 
-public class Card
+public class Card(Card.Suit suit, Card.Rank rank)
 {
     public enum Suit
     {
@@ -28,15 +28,9 @@ public class Card
     }
 
 
-    public Suit CardSuit { get; set; }
+    private Suit CardSuit { get; set; } = suit;
 
-    public Rank CardRank { get; set; }
-
-    public Card(Suit suit, Rank rank)
-    {
-        CardSuit = suit;
-        CardRank = rank;
-    }
+    private Rank CardRank { get; set; } = rank;
 
     public int GetValue()
     {

@@ -1,48 +1,78 @@
-﻿namespace BlackJack;
+﻿using System;
 
-public class Player
+namespace BlackJack;
+
+public class Player(string name)
 {
+    private readonly Variables _variables = new Variables();
 
-    public int Score { get; set; }
-    public string Name { get; set; }
+    public float Money { get; set; }
 
-    public Hand PlayerHand { get; set; } = new Hand();
+    public float Bet { get; set; }
+
+    private string Name { get; set; } = name;
+
+    private List<Hand> Hands { get; set; } = new List<Hand>() { new Hand() };
 
     public void DisplayHand()
     {
         Console.WriteLine($"Player: {Name}");
-        PlayerHand.DisplayHand();
-        Console.WriteLine($"Hand Value: {PlayerHand.GetHandValue()}");
+        foreach (var hand in Hands)
+        {
+            hand.DisplayHand();
+            Console.WriteLine($"Hand Value: {hand.GetHandValue()}");
+        }
     }
 
-    public void AddCardToHand(Card card)
+    public void AddCardToHand(Card card, int handIndex)
     {
-        PlayerHand.AddCard(card);
+        Hands[handIndex].AddCard(card);
     }
 
-    public bool IsBusted()
+    public bool IsBusted(int handIndex)
     {
-        return PlayerHand.GetHandValue() > 21;
+        return Hands[handIndex].IsBusted();
     }
 
-    public void Hit()
+    public void Hit(Card card, int handIndex)
     {
-        //
+        Hands[handIndex].AddCard(card);
+        if (IsBusted(handIndex))
+        {
+            Console.WriteLine("Busted!");
+        }
     }
 
     public void Stand()
     {
-        //
+        return;
     }
 
-    public void DoubleDown()
+    public void DoubleDown(Card card, int handIndex)
     {
-        //
+        if (Money < Hands[handIndex].Bet)
+        {
+            Console.WriteLine("Not enough money to double down");
+            return;
+        }
+
+        Money -= Hands[handIndex].Bet;
+        Hands[handIndex].Bet += Hands[handIndex].Bet;
+        Hit(card, handIndex);
     }
 
     public void Split()
     {
-        //
+        if (Money < Hands[0].Bet)
+        {
+            Console.WriteLine("Not enough money to split");
+            return;
+        }
+
+        Money -= Hands[0].Bet;
+        Hands.Add(new Hand());
+        Hands[1].AddCard(Hands[0].Cards[1]);
+        Hands[0].Cards.RemoveAt(1);
     }
 
 }

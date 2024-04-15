@@ -21,4 +21,6 @@ public class Variables
     public int MinDecks { get; set; } = 1;
 
     public int MinBet { get; set; } = 10;
+
+    public int CardsPerDeck { get; set; } = 52;
 }

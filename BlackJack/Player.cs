@@ -8,8 +8,6 @@ public class Player(string name)
 
     public float Money { get; set; }
 
-    public float Bet { get; set; }
-
     private string Name { get; set; } = name;
 
     private List<Hand> Hands { get; set; } = new List<Hand>() { new Hand() };

@@ -5,7 +5,7 @@ namespace BlackJack;
 
 public class Deck
 {
-    private List<Card> Cards { get; set; } = new List<Card>();
+    public List<Card> Cards { get; set; } = new List<Card>();
 
     public Deck()
     {

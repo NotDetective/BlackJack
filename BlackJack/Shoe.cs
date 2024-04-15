@@ -5,6 +5,11 @@ public class Shoe
     private readonly Variables _variables = new Variables();
     private List<Card> Cards { get; set; } = new List<Card>();
 
+    public void Shuffle()
+    {
+        Cards = Cards.OrderBy(card => Guid.NewGuid()).ToList();
+    }
+
     public void AddDeck(Deck deck)
     {
         // check how many decks are in the shoe

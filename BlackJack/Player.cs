@@ -10,7 +10,9 @@ public class Player(string name)
 
     private string Name { get; set; } = name;
 
-    private List<Hand> Hands { get; set; } = new List<Hand>() { new Hand() };
+    public List<Hand> Hands { get; set; } = new List<Hand>() { new Hand() };
+
+    public bool Insurance { get; set; }
 
     public void DisplayHand()
     {
@@ -73,4 +75,24 @@ public class Player(string name)
         Hands[0].Cards.RemoveAt(1);
     }
 
+    public void AddMoney(float amount)
+    {
+        Money += amount;
+    }
+
+    public void PlaceInsuranceBet()
+    {
+        Money -= Hands[0].Bet / 2;
+        Insurance = true;
+    }
+
+    public void WinInsuranceBet()
+    {
+        Money += Hands[0].Bet;
+    }
+
+    public void LoseInsuranceBet()
+    {
+        Hands[0].Bet = 0;
+    }
 }

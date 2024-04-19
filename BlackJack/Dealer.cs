@@ -26,11 +26,6 @@ public class Dealer(string name) : Player($"Dealer: {name}")
         return this;
     }
 
-    public void AddDeck(Deck deck)
-    {
-        Shoe.AddDeck(deck);
-    }
-
     public void ShuffleShoe()
     {
         Shoe.Shuffle();

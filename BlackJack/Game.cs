@@ -6,9 +6,12 @@ public class Game
 {
     readonly Variables _variables = new Variables();
 
-    public Dealer Dealer { get; set; }
+    private Dealer Dealer { get; set; } = null!;
 
     private List<Player> Players { get; set; } = new List<Player>();
+
+    private Random rng = new Random();
+
 
     public void StartGame()
     {
@@ -27,14 +30,151 @@ public class Game
     {
         while (true)
         {
-            Dealer.DisplayScore();
+            int gameStep = 1;
+            while (gameStep < 5)
+            {
+                Dealer.DisplayScore();
+                Console.WriteLine(gameStep);
 
-            // deal cards to players and dealer
-            // check for blackjack
-            // player turn
-            // dealer turn
-            // check for winner
-            // start over or end game
+                Console.WriteLine("Would you like to play do?");
+                Console.WriteLine("1. Deal initial cards");
+                Console.WriteLine("2. Do Insurance bet");
+                Console.WriteLine("3. Player turn");
+                Console.WriteLine("4. Dealer turn");
+                String input = Console.ReadLine()!.Trim().ToLower();
+
+                switch (input)
+                {
+                    case "1":
+                    case "deal initial cards":
+                        if (gameStep == 1)
+                        {
+                            DealInitialCards();
+                            gameStep++;
+                            Dealer.AddScore(1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have already dealt the initial cards.");
+                            Dealer.SubtractScore(2);
+                        }
+                        break;
+                    case "2":
+                    case "do insurance bet":
+                        if (gameStep == 2)
+                        {
+                            InsuranceCase();
+                            gameStep++;
+                            Dealer.AddScore(1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have already done the insurance bet.");
+                            Dealer.SubtractScore(2);
+                        }
+                        break;
+                    case "3":
+                    case "player turn":
+                        if (gameStep == 3)
+                        {
+                            foreach (var player in Players)
+                            {
+                                PlayerTurn(player);
+                            }
+                            gameStep++;
+                            Dealer.AddScore(1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have already done the player turn.");
+                            Dealer.SubtractScore(2);
+                        }
+                        break;
+                    case "4":
+                    case "dealer turn":
+                        if (gameStep == 4)
+                        {
+                            DealerTurn();
+                            gameStep++;
+                            Dealer.AddScore(1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have already done the dealer turn.");
+                            Dealer.SubtractScore(2);
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input. Please enter again.");
+                        break;
+                }
+            }
+
+            bool playAgain = AskToPlayAgain();
+
+            if (!playAgain)
+            {
+                Console.WriteLine("Thanks for playing!");
+                Dealer.DisplayScore();
+                break;
+            }
+        }
+    }
+
+    private bool AskToPlayAgain()
+    {
+        Console.WriteLine("Would you like to play again? (yes/no)");
+        string input = Console.ReadLine()!.Trim().ToLower();
+
+        while (String.IsNullOrEmpty(input) || (input != "yes" && input != "no"))
+        {
+            Console.WriteLine("Invalid input. Please enter again.");
+            input = Console.ReadLine()!.Trim().ToLower();
+        }
+
+        return input == "yes";
+    }
+
+    private void DealerTurn()
+    {
+        while (Dealer.GetPlayer().Hands[0].GetHandValue() < 17)
+        {
+            Dealer.DealCard(Dealer.GetPlayer(), 0);
+        }
+
+        Dealer.GetPlayer().DisplayHand();
+
+        if (Dealer.GetPlayer().Hands[0].IsBusted())
+        {
+            Console.WriteLine("Dealer busted!");
+
+            foreach (var player in Players)
+            {
+                foreach (var hand in player.Hands)
+                {
+                    if (!hand.IsBusted())
+                    {
+                        player.AddMoney(hand.Bet * 2);
+                    }
+                }
+            }
+
+            return;
+        }
+
+        foreach (var player in Players)
+        {
+            foreach (var hand in player.Hands)
+            {
+                if (hand.GetHandValue() > Dealer.GetPlayer().Hands[0].GetHandValue())
+                {
+                    player.AddMoney(hand.Bet * 2);
+                }
+                else if (hand.GetHandValue() == Dealer.GetPlayer().Hands[0].GetHandValue())
+                {
+                    player.AddMoney(hand.Bet);
+                }
+            }
         }
     }
 
@@ -133,6 +273,7 @@ public class Game
                         Console.WriteLine("You have already added decks.");
                         Dealer.SubtractScore(2);
                     }
+
                     break;
                 case "2":
                 case "Shuffle shoe":
@@ -147,6 +288,7 @@ public class Game
                         Console.WriteLine("Wait until you have added decks before shuffling.");
                         Dealer.SubtractScore(2);
                     }
+
                     break;
                 default:
                     Console.WriteLine("Invalid input. Please enter again.");
@@ -162,7 +304,8 @@ public class Game
 
         int numberOfDecks;
 
-        while (!int.TryParse(input, out numberOfDecks) || numberOfDecks <= _variables.MinDecks || numberOfDecks > _variables.MaxDecks)
+        while (!int.TryParse(input, out numberOfDecks) || numberOfDecks <= _variables.MinDecks ||
+               numberOfDecks > _variables.MaxDecks)
         {
             if (!int.TryParse(input, out _))
             {
@@ -184,7 +327,140 @@ public class Game
 
         for (int i = 0; i < numberOfDecks; i++)
         {
+            Console.WriteLine("Adding deck...");
             Dealer.Shoe.AddDeck(new Deck());
         }
+    }
+
+    private void DealInitialCards()
+    {
+        for (int i = 0; i < _variables.StartingHandSize; i++)
+        {
+            foreach (var player in Players)
+            {
+                Dealer.DealCard(player, 0);
+            }
+
+            Dealer.DealCard(Dealer.GetPlayer(), 0);
+        }
+
+        foreach (var player in Players)
+        {
+            player.DisplayHand();
+        }
+    }
+
+    private void InsuranceCase()
+    {
+        if (Dealer.GetPlayer().Hands[0].Cards[0].GetValue() != 1)
+        {
+            return;
+        }
+
+        var playersWithOutInsurance = new List<Player>();
+
+        foreach (var player in Players)
+        {
+            if (rng.Next(0, 3) == 1)
+            {
+                player.PlaceInsuranceBet();
+            }
+            else
+            {
+                playersWithOutInsurance.Add(player);
+            }
+        }
+
+        if (Dealer.GetPlayer().Hands[0].IsBlackJack())
+        {
+            foreach (var player in Players)
+            {
+                if (player.Insurance)
+                {
+                    player.WinInsuranceBet();
+                }
+            }
+        }
+        else
+        {
+            foreach (var player in playersWithOutInsurance)
+            {
+                player.LoseInsuranceBet();
+            }
+        }
+
+        foreach (var player in Players)
+        {
+            player.Insurance = false;
+        }
+    }
+
+    private void PlayerTurn(Player player, int handIndex = 0)
+    {
+        while (true)
+        {
+            int hitChange = player.Hands[handIndex].GetHandValue() - 17;
+
+            if (player.Hands[0].IsBlackJack())
+            {
+                Console.WriteLine("Blackjack!");
+                player.AddMoney(player.Hands[handIndex].Bet * 1.5f);
+                return;
+            }
+
+            if (player.Hands[handIndex].Cards[0].GetValue() == player.Hands[handIndex].Cards[1].GetValue())
+            {
+                if (rng.Next(0, 3) == 1)
+                {
+                    player.Split();
+                    PlayerSplitCase(player, handIndex);
+                    PlayerTurn(player, handIndex);
+                    handIndex++;
+                    continue;
+                }
+            }
+
+            if (hitChange > 0)
+            {
+                player.Stand();
+            }
+            else if (hitChange < 0)
+            {
+                player.Hit(Dealer.Shoe.DrawCard(), handIndex);
+            }
+            else
+            {
+                if (rng.Next(0, 3) == 1)
+                {
+                    player.DoubleDown(Dealer.Shoe.DrawCard(), handIndex);
+                }
+                else
+                {
+                    player.Hit(Dealer.Shoe.DrawCard(), handIndex);
+                }
+            }
+
+            if (player.Hands[handIndex].IsBusted())
+            {
+                Console.WriteLine("Busted!");
+
+                if (handIndex != 0)
+                {
+                    player.Hands.RemoveAt(handIndex);
+                }
+                else
+                {
+                    player.Hands[handIndex].Bet = 0;
+                }
+            }
+
+            break;
+        }
+    }
+
+    private void PlayerSplitCase(Player player, int handIndex)
+    {
+        player.AddCardToHand(Dealer.Shoe.DrawCard(), handIndex);
+        player.AddCardToHand(Dealer.Shoe.DrawCard(), handIndex + 1);
     }
 }

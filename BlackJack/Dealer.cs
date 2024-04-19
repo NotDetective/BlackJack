@@ -4,7 +4,7 @@ public class Dealer(string name) : Player($"Dealer: {name}")
 {
     private int Score { get; set; }
 
-    private Shoe Shoe { get; set; } = new Shoe();
+    public Shoe Shoe { get; set; } = new Shoe();
 
     public void AddScore(int score)
     {

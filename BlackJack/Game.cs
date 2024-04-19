@@ -13,26 +13,29 @@ public class Game
     public void StartGame()
     {
         SetUpGame();
-
+        GameLoop();
     }
 
     private void SetUpGame()
     {
         SetUpDealer();
         SetUpPlayers();
-        // start set up game
-        // add decks to shoe
-        // shuffle shoe
+        DealerSetUp();
     }
 
     private void GameLoop()
     {
-        // deal cards to players and dealer
-        // check for blackjack
-        // player turn
-        // dealer turn
-        // check for winner
-        // start over or end game
+        while (true)
+        {
+            Dealer.DisplayScore();
+
+            // deal cards to players and dealer
+            // check for blackjack
+            // player turn
+            // dealer turn
+            // check for winner
+            // start over or end game
+        }
     }
 
     private void SetUpDealer()
@@ -67,7 +70,8 @@ public class Game
                 // Check if the parsed number is within the valid range
                 if (numberOfPlayers <= 0 || numberOfPlayers > _variables.MaxPlayers)
                 {
-                    Console.WriteLine($"Number of players must be a positive integer less than or equal to {_variables.MaxPlayers}. Please enter again:");
+                    Console.WriteLine(
+                        $"Number of players must be a positive integer less than or equal to {_variables.MaxPlayers}. Please enter again:");
                 }
             }
             catch (FormatException)
@@ -84,7 +88,6 @@ public class Game
         {
             SetUpPlayer();
         }
-
     }
 
     private void SetUpPlayer()
@@ -106,9 +109,82 @@ public class Game
 
     private void DealerSetUp()
     {
-        Console.WriteLine("What to do first: ");
-        Console.WriteLine("1. Add deck");
-        Console.WriteLine("2. Shuffle shoe");
+        int setupStep = 0;
+        while (setupStep != 2)
+        {
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1. Add deck");
+            Console.WriteLine("2. Shuffle shoe");
 
+            string input = Console.ReadLine()!.Trim();
+
+            switch (input)
+            {
+                case "1":
+                case "Add deck":
+                    if (setupStep == 0)
+                    {
+                        AddDecks();
+                        setupStep++;
+                        Dealer.AddScore(1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have already added decks.");
+                        Dealer.SubtractScore(2);
+                    }
+                    break;
+                case "2":
+                case "Shuffle shoe":
+                    if (setupStep == 1)
+                    {
+                        Dealer.ShuffleShoe();
+                        setupStep++;
+                        Dealer.AddScore(1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Wait until you have added decks before shuffling.");
+                        Dealer.SubtractScore(2);
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Invalid input. Please enter again.");
+                    break;
+            }
+        }
+    }
+
+    private void AddDecks()
+    {
+        Console.WriteLine("How many decks to add?");
+        string input = Console.ReadLine()!.Trim();
+
+        int numberOfDecks;
+
+        while (!int.TryParse(input, out numberOfDecks) || numberOfDecks <= _variables.MinDecks || numberOfDecks > _variables.MaxDecks)
+        {
+            if (!int.TryParse(input, out _))
+            {
+                Console.WriteLine("Invalid input. Please enter a positive integer.");
+            }
+            else if (numberOfDecks <= _variables.MinDecks)
+            {
+                Console.WriteLine($"The number of decks must be greater than {_variables.MinDecks}.");
+            }
+            else if (numberOfDecks > _variables.MaxDecks)
+            {
+                Console.WriteLine($"The number of decks must be less than or equal to {_variables.MaxDecks}.");
+            }
+
+            Console.WriteLine("Please enter a valid number of decks:");
+            input = Console.ReadLine()!.Trim();
+        }
+
+
+        for (int i = 0; i < numberOfDecks; i++)
+        {
+            Dealer.Shoe.AddDeck(new Deck());
+        }
     }
 }
